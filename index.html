@@ -69,24 +69,31 @@
     </form>
 
     <section id="error-btns">
-      <button>Console Log</button>
-      <button>Console Error</button>
-      <button>Console Count</button>
-      <button>Console Warn</button>
-      <button>Console Assert</button>
-      <button>Console Clear</button>
-      <button>Console Dir</button>
-      <button>Console dirxml</button>
-      <button>Console Group Start</button>
-      <button>Console Group End</button>
-      <button>Console Table</button>
-      <button>Start Timer</button>
-      <button>End Timer</button>
-      <button>Console Trace</button>
-      <button>Trigger a Global Error</button>
+      <button id="console-log-button">Console Log</button>
+      <button id="console-error-button">Console Error</button>
+      <button id="console-count-button">Console Count</button>
+      <button id="console-warn-button">Console Warn</button>
+      <button id="console-assert-button">Console Assert</button>
+      <button id="console-clear-button">Console Clear</button>
+      <button id="console-dir-button">Console Dir</button>
+      <button id="console-dirxml-button">Console dirxml</button>
+      <button id="console-group-start-button">Console Group Start</button>
+      <button id="console-group-end-button">Console Group End</button>
+      <button id="console-table-button">Console Table</button>
+      <button id="console-start-timer-button">Start Timer</button>
+      <button id="console-end-timer-button">End Timer</button>
+      <button id="console-trace-button">Console Trace</button>
+      <button id="console-global-error-button">Trigger a Global Error</button>
+      <button id="find-some-text">Find Text</button>
     </section>
   </main>
-
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+  <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "f743820e719a4f1b868fe96c030b67ec"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+  </script>            
   <script>
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
@@ -99,6 +106,109 @@
     });
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
+
+    let consoleLogButton = document.getElementById("console-log-button");
+    consoleLogButton.addEventListener('click', () => {console.log("Console Log Demo")});
+
+    let consoleErrorButton = document.getElementById("console-error-button");
+    consoleErrorButton.addEventListener('click', () => {console.error("Console Error Demo")});
+
+    let consoleCountButton = document.getElementById("console-count-button");
+    consoleCountButton.addEventListener('click', () => {console.count("Count Button")});
+
+    let consoleWarnButton = document.getElementById("console-warn-button");
+    consoleWarnButton.addEventListener('click', () => {console.warn("Console Warn Button")});
+
+    let consoleAssertButton = document.getElementById("console-assert-button");
+    consoleAssertButton.addEventListener('click', () => {
+      const number = 2;
+      const errorMsg = 'The number does not equal 3.';
+      console.assert(number == 3, {number,errorMsg});
+    });
+
+    let consoleClearButton = document.getElementById("console-clear-button");
+    consoleClearButton.addEventListener('click', () => {console.clear()});
+
+    let consoleDirButton = document.getElementById("console-dir-button");
+    consoleDirButton.addEventListener('click', () => {console.dir(consoleDirButton)});
+
+    let consoleDirXmlButton = document.getElementById("console-dirxml-button");
+    consoleDirXmlButton.addEventListener('click', () => {console.dirxml(consoleDirXmlButton)});
+
+    let consoleGroupStartButton = document.getElementById("console-group-start-button");
+    consoleGroupStartButton.addEventListener('click', () => {console.group("console.group")});
+
+    let consoleGroupEndButton = document.getElementById("console-group-end-button");
+    consoleGroupEndButton.addEventListener('click', () => {console.groupEnd("console.group")});
+
+    let consoleTableButton = document.getElementById("console-table-button");
+    consoleTableButton.addEventListener('click', () => {
+      const classes = [
+        {
+          name : "Software Engineering",
+          number : 110
+        },
+        {
+          name : "Programming Languages",
+          number : 130
+        },
+        {
+          name : "Advanced Software Engineering",
+          number : 112
+        }
+    ]
+    console.table(classes);
+    });
+    
+    let consoleStartTimeButton = document.getElementById("console-start-timer-button");
+    consoleStartTimeButton.addEventListener('click', () => {console.time("Timer Button")});
+
+    let consoleEndTimeButton = document.getElementById("console-end-timer-button");
+    consoleEndTimeButton.addEventListener('click', () => {console.timeEnd("Timer Button")});
+
+    let consoleTraceButton = document.getElementById("console-trace-button");
+    consoleTraceButton.addEventListener('click', function handleBtnClick(){
+      const deep = () => {deeper();};
+      const deeper = () => {deepest();};
+      const deepest = () => {console.trace()}
+      deep();
+    });
+
+    let consoleGlobalErrorButton = document.getElementById("console-global-error-button");
+    consoleGlobalErrorButton.addEventListener('click', function handleBtnClick(){
+      boom
+    });
+
+    let findButton = document.getElementById("find-some-text");
+    findButton.addEventListener('click',() => {
+      try {
+        let textToFind = document.getElementById("lol");
+        if(textToFind === null){
+          throw new TextNotFoundError("textToFind not found");
+        }
+        console.log(textToFind.innerText)
+      } catch (error) {
+        console.log("Did not find text");
+        console.error(error)
+      }
+      finally{
+        console.log("tryna press the button again?");
+      }
+    });
+
+    class TextNotFoundError extends Error {
+      constructor(message) {
+        super(message);
+        this.name = "TextNotFoundError";
+      }
+    }
+    
+    window.onerror = function (message, source, lineno, colno, error) {
+    console.log("Sadly an error happened my friend");
+    console.error(error)
+    TrackJS.track('Testing TrackJS!');
+    return true;
+  };
 
     // Start your code here
     // You may move this JS to another file if you wish
